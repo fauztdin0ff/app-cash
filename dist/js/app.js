@@ -102,16 +102,15 @@ document.addEventListener("DOMContentLoaded", function () {
    const menuBody = document.querySelector(".menu__body");
    const body = document.querySelector("body");
    const menuBodyClose = document.querySelector(".menu__body-close");
+   const menuLinks = menuBody.querySelectorAll("a[href^='#']");
 
    if (menuIcon && menuBody) {
-      // Открытие/закрытие меню по иконке
       menuIcon.addEventListener("click", function () {
          menuIcon.classList.toggle("active");
          menuBody.classList.toggle("active");
          body.classList.toggle("no-scroll");
       });
 
-      // Закрытие меню при клике на ссылку внутри меню
       menuBody.addEventListener("click", function (event) {
          if (event.target.tagName === "A" || event.target.closest("a")) {
             menuIcon.classList.remove("active");
@@ -120,7 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
          }
       });
 
-      // Закрытие меню при клике на кнопку закрытия
       if (menuBodyClose) {
          menuBodyClose.addEventListener("click", function () {
             menuIcon.classList.remove("active");
@@ -129,7 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
          });
       }
 
-      // Закрытие меню при клике вне области меню
       document.addEventListener("click", function (event) {
          if (!menuBody.contains(event.target) && !menuIcon.contains(event.target)) {
             menuIcon.classList.remove("active");
@@ -137,6 +134,37 @@ document.addEventListener("DOMContentLoaded", function () {
             body.classList.remove("no-scroll");
          }
       });
+
+      menuLinks.forEach(link => {
+         link.addEventListener("click", function () {
+            menuLinks.forEach(l => l.classList.remove("active"));
+            this.classList.add("active");
+         });
+      });
+
+      const sectionElements = Array.from(menuLinks).map(link => {
+         const id = link.getAttribute("href").slice(1);
+         return document.getElementById(id);
+      });
+
+      function onScrollActiveLink() {
+         const scrollPos = window.scrollY + window.innerHeight / 3;
+
+         sectionElements.forEach((section, index) => {
+            if (section) {
+               const offsetTop = section.offsetTop;
+               const offsetHeight = section.offsetHeight;
+
+               if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
+                  menuLinks.forEach(l => l.classList.remove("active"));
+                  menuLinks[index].classList.add("active");
+               }
+            }
+         });
+      }
+
+      window.addEventListener("scroll", onScrollActiveLink);
+      window.addEventListener("load", onScrollActiveLink);
    }
 });
 

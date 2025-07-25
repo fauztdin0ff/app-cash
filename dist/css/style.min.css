@@ -539,6 +539,11 @@ main {
   flex-direction: column;
   justify-content: space-between;
 }
+@media (width < 767px) {
+  .hero__card {
+    pointer-events: none;
+  }
+}
 .hero__card-head {
   display: flex;
   align-items: flex-start;
