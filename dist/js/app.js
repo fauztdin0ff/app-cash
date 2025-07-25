@@ -508,6 +508,8 @@ document.addEventListener("DOMContentLoaded", () => {
    window.addEventListener("scroll", updateProgress);
    window.addEventListener("resize", updateProgress);
    updateProgress();
+   document.querySelector('.preloader').style.display = 'none';
+   runAllGSAPAnimations();
 });
 
 
@@ -677,6 +679,163 @@ thumb.addEventListener('touchstart', startDragging);
 document.addEventListener('touchmove', onMove);
 document.addEventListener('touchend', stopDragging);
 updateSlider(slider.getBoundingClientRect().left + (30000 - minValue) / (maxValue - minValue) * slider.clientWidth);
+
+
+/*------------------------------Other animations---------------------------*/
+gsap.registerPlugin(ScrollTrigger);
+
+function runAllGSAPAnimations() {
+
+   gsap.from('.hero__text, .hero__cards', {
+      opacity: 0,
+      duration: 1,
+      ease: "power1.out",
+   });
+
+   gsap.fromTo('.hero__title', {
+      clipPath: 'inset(0 100% 0 0)',
+      opacity: 0
+   },
+      {
+         clipPath: 'inset(0 0% 0 0)',
+         opacity: 1,
+         duration: 1,
+         ease: 'power2.out'
+      },);
+
+   gsap.fromTo('.hero__subtitle', {
+      clipPath: 'inset(0 100% 0 0)',
+      opacity: 0
+   },
+      {
+         clipPath: 'inset(0 0% 0 0)',
+         opacity: 1,
+         delay: 0.2,
+         duration: 1,
+         ease: 'power2.out'
+      },);
+
+   gsap.from('.hero__buttons', {
+      opacity: 0,
+      y: 20,
+      delay: 0.4,
+   });
+
+   const wrappers = document.querySelectorAll('.service__map-item-wrapper');
+   const isMobile = window.innerWidth < 768;
+
+   wrappers.forEach((wrapper, index) => {
+      const item = wrapper.querySelector('.service__map-item');
+      if (!item) return;
+
+      const directionX = isMobile
+         ? -50
+         : (index % 2 === 0 ? -50 : 50);
+
+      gsap.from(item, {
+         x: directionX,
+         opacity: 0,
+         duration: 1,
+         ease: "power2.out",
+         scrollTrigger: {
+            trigger: wrapper,
+            start: "top 85%",
+            toggleActions: "play none none none"
+         }
+      });
+   });
+
+   const counter = document.querySelector('.count');
+
+   if (!counter) return;
+
+   const obj = { val: 30000 };
+
+   gsap.to(obj, {
+      val: 200000,
+      duration: 2,
+      ease: "power2.out",
+      onUpdate: () => {
+         counter.textContent = formatWithDots(Math.floor(obj.val));
+      },
+      scrollTrigger: {
+         trigger: counter,
+         start: "top 90%",
+         toggleActions: "play none none none"
+      }
+   });
+
+   function formatWithDots(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+   }
+
+
+   function animateHeadings() {
+      // Анимация .section-label
+      document.querySelectorAll('.section-label').forEach((el) => {
+         gsap.from(el, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+               trigger: el,
+               start: "top 90%",
+               toggleActions: "play none none none"
+            }
+         });
+      });
+
+      // Анимация .title
+      document.querySelectorAll('.title').forEach((el) => {
+         gsap.from(el, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+               trigger: el,
+               start: "top 85%",
+               toggleActions: "play none none none"
+            }
+         });
+      });
+
+      // Анимация .subtitle
+      document.querySelectorAll('.subtitle').forEach((el) => {
+         gsap.from(el, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            delay: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+               trigger: el,
+               start: "top 90%",
+               toggleActions: "play none none none"
+            }
+         });
+      });
+   }
+
+   animateHeadings();
+
+   const cards = document.querySelectorAll('.how__card');
+
+   gsap.from(cards, {
+      y: -100,
+      opacity: 0,
+      duration: 1,
+      ease: "bounce.out",
+      stagger: 0.15,
+      scrollTrigger: {
+         trigger: ".how__cards",
+         start: "top 85%",
+         toggleActions: "play none none none"
+      }
+   });
+
+}
 })();
 
 /******/ })()
