@@ -625,7 +625,7 @@ screenGroups.forEach(group => {
 });
 
 /*------------------------------Calc range---------------------------*/
-const sliderContainer = document.querySelector('.slider-container');
+/* const sliderContainer = document.querySelector('.slider-container');
 const minValue = parseInt(sliderContainer.getAttribute('data-min'));
 const maxValue = parseInt(sliderContainer.getAttribute('data-max'));
 const step = 100;
@@ -679,7 +679,7 @@ thumb.addEventListener('touchstart', startDragging);
 document.addEventListener('touchmove', onMove);
 document.addEventListener('touchend', stopDragging);
 updateSlider(slider.getBoundingClientRect().left + (30000 - minValue) / (maxValue - minValue) * slider.clientWidth);
-
+ */
 
 /*------------------------------Other animations---------------------------*/
 gsap.registerPlugin(ScrollTrigger);
@@ -836,6 +836,85 @@ function runAllGSAPAnimations() {
    });
 
 }
+
+
+/*---------------------------------------------------------------------------
+Chart
+---------------------------------------------------------------------------*/
+const ctx = document.getElementById('myChart1');
+
+new Chart(ctx, {
+   type: 'bar',
+   data: {
+      labels: ['Start 30000', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+      datasets: [{
+         label: '',
+         data: [30000, 45000, 80000, 128000, 152000, 200000],
+         borderWidth: 1
+      }]
+   },
+   options: {
+      scales: {
+         x: {
+            grid: {
+               color: 'rgba(200,200,200,0.02)'
+            }
+         },
+         y: {
+            beginAtZero: true,
+            grid: {
+               color: 'rgba(200,200,200,0.02)'
+            }
+         }
+      },
+      plugins: {
+         legend: {
+            display: false
+         },
+         title: {
+            display: false
+         }
+      }
+   }
+});
+
+
+/*---------------------------------------------------------------------------
+Chart 2
+---------------------------------------------------------------------------*/
+const data = {
+   labels: ['Мой процент 30%', 'Клиент получает 70%',],
+   datasets: [{
+      data: [30, 70],
+      backgroundColor: [
+         '#06b6d4',
+         '#12f287',
+      ],
+      borderColor: '#fff',
+      borderWidth: 1
+   }]
+};
+
+const config = {
+   type: 'doughnut',
+   data: data,
+   options: {
+      responsive: true,
+      plugins: {
+         legend: {
+            display: false,
+         },
+         title: {
+            display: false,
+         }
+      }
+   },
+};
+
+const myChart = new Chart(
+   document.getElementById('myChart2'),
+   config
+);
 })();
 
 /******/ })()
